@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
 app.get("/users", async (req, res) => {
   try {
     const resultado = await pool.query(
-      "SELECT androidemosecurity.usersdemo "
+      "SELECT * FROM androidemosecurity.usersdemo "
     );
     res.json(resultado.rows);
   } catch (error) {
