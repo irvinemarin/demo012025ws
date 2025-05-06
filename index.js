@@ -1,4 +1,5 @@
-const express = require('express');
+const pool = require("./database/db.js"); // importa la conexión
+const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -6,29 +7,24 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 // Ruta de prueba
-app.get('/', (req, res) => {
-    res.send('¡Hola desde tu Web Service en Render!');
+app.get("/", (req, res) => {
+  res.send("¡Hola desde tu Web Service en Render!");
 });
 
 // Endpoint con JSON array personalizado
-app.get('/users', (req, res) => {
-    const usuarios = [
-      {
-        id: 1,
-        nombre: 'Juan Pérez',
-        email: 'juan@example.com'
-      },
-      {
-        id: 2,
-        nombre: 'María Gómez',
-        email: 'maria@example.com'
-      }
-    ];
-  
-    res.json(usuarios); // Esta línea responde con el JSON array
-  });
+app.get("/users", async (req, res) => {
+  try {
+    const resultado = await pool.query(
+      "SELECT androidemosecurity.usersdemo ORDER  ASC "
+    );
+    res.json(resultado.rows);
+  } catch (error) {
+    console.error("Error al consultar la base de datos:", error);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
+});
 
 // Empieza el servidor
 app.listen(PORT, () => {
-    console.log(`Servidor corriendo en el puerto ${PORT}`);
+  console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
